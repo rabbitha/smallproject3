@@ -1,0 +1,2920 @@
+{
+	"info": {
+		"_postman_id": "d291d4c4-d36b-48d7-9a21-a9e0040ee0cc",
+		"name": "SmallProject3/OrangeHRM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21866752"
+	},
+	"item": [
+		{
+			"name": "01. Admin Feature",
+			"item": [
+				{
+					"name": "admin/createToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData.access_token);\r",
+									"\r",
+									"pm.test(\"GET TOKEN\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"access_token\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "client_id",
+									"value": "mini",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "on007",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/oauth/issueToken",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"oauth",
+								"issueToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Admin Success Login\", () => {\r",
+									"    const expectedObject = {\r",
+									"    \"login\": true,\r",
+									"    };\r",
+									"  pm.expect(pm.response.json()).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "s3Kol4HQA!*",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin/list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"const expectedObject = {\r",
+									"        \"userRole\": \"Admin\",\r",
+									"        \"status\": \"Enabled\",\r",
+									"    };\r",
+									"pm.test(\"Admin list showed\", () => {\r",
+									"    pm.expect(respond.data[1]).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/user?offset=1&limit=10&userRole=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "userRole",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin/organizationInformation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data organzation showed\", () => {\r",
+									"    pm.expect(respond.data).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/organization",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"organization"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02. Attendence Feature",
+			"item": [
+				{
+					"name": "Attendence/punchIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successfully Punched In\", () => {\r",
+									"    const expectedObject = {\r",
+									"    \"success\": \"Successfully Punched In\",\r",
+									"    };\r",
+									"  pm.expect(pm.response.json()).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "665",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "Asia/Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "hadir",
+									"type": "text"
+								},
+								{
+									"key": "datetime",
+									"value": "2022-07-11 07:40",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/punch-in",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"punch-in"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "665"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attendence/punchIn Failed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									" console.log(respond.error);\r",
+									" pm.test(\"Failed Punched In\", () => {\r",
+									"     const expectedObject = {\r",
+									"         \"status\": \"202\",\r",
+									"         \"text\": \"Cannot Proceed Punch In Employee Already Punched In\",\r",
+									"     };\r",
+									"   pm.expect(respond.error).to.deep.include(expectedObject);\r",
+									" });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "665",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "Asia/Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "hadir",
+									"type": "text"
+								},
+								{
+									"key": "datetime",
+									"value": "2022-07-11 07:40",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/punch-in",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"punch-in"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "665"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attendence/punchOut",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object is contained = Successfully Punched Out\", () => {\r",
+									"    const expectedObject = {\r",
+									"    \"success\": \"Successfully Punched Out\",\r",
+									"    };\r",
+									"  pm.expect(pm.response.json()).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "665",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "Asia/Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "pulang",
+									"type": "text"
+								},
+								{
+									"key": "datetime",
+									"value": "2022-07-15 16:45",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/punch-out",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"punch-out"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "665"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attendence/punchOut Failed Punch Out",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									" console.log(respond.error);\r",
+									" pm.test(\"Failed Punched In\", () => {\r",
+									"     const expectedObject = {\r",
+									"         \"status\": \"202\",\r",
+									"         \"text\": \"Cannot Proceed Punch Out Employee Already Punched Out\",\r",
+									"     };\r",
+									"   pm.expect(respond.error).to.deep.include(expectedObject);\r",
+									" });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "665",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "Asia/Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "pulang",
+									"type": "text"
+								},
+								{
+									"key": "datetime",
+									"value": "2022-07-15 16:45",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/punch-out",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"punch-out"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "665"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03. Employee Feature",
+			"item": [
+				{
+					"name": "Employee/01.Save Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"idEmployee\", jsonData.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Mini",
+									"type": "text"
+								},
+								{
+									"key": "middleName",
+									"value": "On",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Banana",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "10111110",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "777"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/07. Save Employee Contact Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Contact Employee Successfully Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"id\": {{idEmployee}},\r\n    \"code\": \"771\",\r\n    \"fullName\": \"Mini On Bob\",\r\n    \"addressStreet1\": \"Goa Biru\",\r\n    \"addressStreet2\": \"-\",\r\n    \"city\": \"Piyaman\",\r\n    \"state\": \"Yogyakarta\",\r\n    \"zip\": 55861,\r\n    \"county\": \"Indonesia\",\r\n    \"homeTelephone\": 0274555777,\r\n    \"workTelephone\": 0274111222,\r\n    \"mobile\": 085712345678,\r\n    \"workEmail\": \"bob.mini@testing.com\",\r\n    \"otherEmail\":\"minibob@testing.com\",\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/contact-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"contact-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/12. Save Employee Dependent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"seqId_Depend\", jsonData.sequenceNumber);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Dependents Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Stuart",
+									"type": "text"
+								},
+								{
+									"key": "relationship",
+									"value": "Brother",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "2005-04-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/dependent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"dependent"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/14. Save Employee Job Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Data Employee Job Detail Successfully Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "catagory",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "subunit",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "joinedDate",
+									"value": "2019-05-15",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2019-06-01",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/job-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"job-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/17. Save Supervisor Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Supervisor Details Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "supervisorId",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "reportingMethod",
+									"value": "Direct",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/supervisor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"supervisor"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/22.Save Employee Work Experience",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"seqId_WoEx\", jsonData.seqId);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Work Experience Employee Saved\", () => {\r",
+									"    const expectedObject = {\r",
+									"    \"success\": \"Successfully Saved\",\r",
+									"    };\r",
+									"  pm.expect(pm.response.json()).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "company",
+									"value": "Cilsy Fiolution",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Finance Manager",
+									"type": "text"
+								},
+								{
+									"key": "formDate",
+									"value": "2022-07-01",
+									"type": "text"
+								},
+								{
+									"key": "toDate",
+									"value": "2023-07-01",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "good skill",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/work-experience",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"work-experience"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/26. Save Employee Education",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"seqId_Edu\", jsonData.seqId);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Data Employee Education Saved\", () => {\r",
+									"    const expectedObject = {\r",
+									"    \"success\": \"Successfully Saved\",\r",
+									"    };\r",
+									"  pm.expect(pm.response.json()).to.deep.include(expectedObject);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "level",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "seqId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "institute",
+									"value": "Universitas Banana",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2019-06-01",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-02-01",
+									"type": "text"
+								},
+								{
+									"key": "specialization",
+									"value": "Banking",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2021",
+									"type": "text"
+								},
+								{
+									"key": "gpa",
+									"value": "3.89",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/education",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"education"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/29. Save Employee Custom Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Data Employee Custom Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "fieldId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "value",
+									"value": "Rp 10.000.000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/custom-field",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"custom-field"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/02. Employee Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee Details showed\", () => {\r",
+									"    pm.expect(respond.data).to.be.an(\"object\");\r",
+									"    pm.expect(respond.data.employeeId).to.eql(pm.collectionVariables.get(\"idEmployee\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/05. Employee Search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee showed\", () => {\r",
+									"    pm.expect(respond.data[0]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/search",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/06. Employee Contact Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Contact Employee showed\", () => {\r",
+									"  pm.expect(respond.data.id).to.eql(pm.collectionVariables.get(\"idEmployee\"));\r",
+									"  pm.expect(respond.data.fullName).to.eql(\"Mini On Banana\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/contact-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"contact-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/09. Employee Dependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"value = \"\" + pm.collectionVariables.get(\"seqId_Depend\");\r",
+									"pm.test(\"Data Employee Dependents Showed\", () => {\r",
+									"  pm.expect(respond.data[0].sequenceNumber).to.eql(value);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/dependent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"dependent"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/13. Employee Job Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee Job Detail showed\", () => {\r",
+									"    pm.expect(respond.data).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/job-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"job-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/16. Supervisor Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Supervisor Details showed\", () => {\r",
+									"    pm.expect(respond.data[0]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/supervisor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"supervisor"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/20. Employee Events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee Event showed\", () => {\r",
+									"    pm.expect(respond.data[0]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/event?employeeId={{idEmployee}}&fromDate=2022-07-17",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								"event"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "{{idEmployee}}"
+								},
+								{
+									"key": "fromDate",
+									"value": "2022-07-17"
+								},
+								{
+									"key": "toDate",
+									"value": "2022-07-17",
+									"disabled": true
+								},
+								{
+									"key": "event",
+									"value": "update",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "contact",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/21. Employee Work Experience",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee Work Experience showed\", () => {\r",
+									"    pm.expect(respond.data[0]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/work-experience",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"work-experience"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/ 25. Employee Education",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"value = \"\" + pm.collectionVariables.get(\"seqId_Edu\");\r",
+									"pm.test(\"Data Employee Education Showed\", () => {\r",
+									"  pm.expect(respond.data[0].seqId).to.eql(value);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/education",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"education"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/28. Employee Custom Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Employee Custom Field showed\", () => {\r",
+									"    pm.expect(respond.data[1]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/custom-field",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"custom-field"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/32. Custom Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const respond = pm.response.json();\r",
+									"pm.test(\"Data Custom Field showed\", () => {\r",
+									"    pm.expect(respond.data[1]).to.be.an(\"object\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/custom-field",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"custom-field"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/03. Update Employee Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Successfully Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Mini\",\r\n    \"middleName\": \"On\",\r\n    \"lastName\": \"Bob\",\r\n    \"code\": \"101011\",\r\n    \"employeeId\": {{idEmployee}},\r\n    \"fullName\": \"Mini On Bob\",\r\n    \"dob\": 2000-01-01,\r\n    \"licenseNumber\": 2021-09-01,\r\n    \"licenseNumberExpDate\":2023-01-01,\r\n    \"maritalStatus\": \"Single\",\r\n    \"gender\": \"Male\",\r\n    \"otherId\": \"347123456789001\",\r\n    \"nationality\": \"Indonesian\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/08. Update Employee Contact Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Contact Employee Successfully Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"id\": {{idEmployee}},\r\n    \"code\": \"771\",\r\n    \"fullName\": \"Mini On Bob\",\r\n    \"addressStreet1\": \"Goa Biru\",\r\n    \"addressStreet2\": \"Biru Indah\",\r\n    \"city\": \"Piyaman\",\r\n    \"state\": \"Yogyakarta\",\r\n    \"zip\": 55861,\r\n    \"county\": \"Indonesia\",\r\n    \"homeTelephone\": 0274555777,\r\n    \"workTelephone\": 0274111222,\r\n    \"mobile\": 085712345678,\r\n    \"workEmail\": bob.mini@testing.com,\r\n    \"otherEmail\": minibob@testing.com,\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/contact-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"contact-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/11. Update Employee Dependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Dependents Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Dave",
+									"type": "text"
+								},
+								{
+									"key": "relationship",
+									"value": "Brother",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "2001-01-01",
+									"type": "text"
+								},
+								{
+									"key": "sequenceNumber",
+									"value": "{{seqId_Depend}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/dependent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"dependent"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/15. Update Employee Job Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Data Employee Job Detail Successfully Saved\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "catagory",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "subunit",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "joinedDate",
+									"value": "2019-05-15",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2019-06-01",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/job-detail",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"job-detail"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/19. Update Supervisor Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{idEmployee}},\r\n    \"supervisorId\": 1,\r\n    \"reportingMethod\": \"Update Data\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/supervisor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"supervisor"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/23. Update Employee Work Experience",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Data Employee Work Experience Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "seqId",
+									"value": "{{seqId_WoEx}}",
+									"type": "text"
+								},
+								{
+									"key": "company",
+									"value": "Cilsy Fiolution",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Finance Manager",
+									"type": "text"
+								},
+								{
+									"key": "formDate",
+									"value": "2022-07-01",
+									"type": "text"
+								},
+								{
+									"key": "toDate",
+									"value": "2023-07-01",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "good skill",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/work-experience",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"work-experience"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/30. Update Employee Custom Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Custom Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Saved\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fieldId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "value",
+									"value": "Rp 15.000.000,-",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/custom-field",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"custom-field"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/33. Update Employee Education",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Education Updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Updated\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "level",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "seqId",
+									"value": "{{seqId_Edu}}",
+									"type": "text"
+								},
+								{
+									"key": "institute",
+									"value": "Universitas Banana",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2019-06-01",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-02-01",
+									"type": "text"
+								},
+								{
+									"key": "specialization",
+									"value": "Banking",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2021",
+									"type": "text"
+								},
+								{
+									"key": "gpa",
+									"value": "3.89",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/education",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"education"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": " Employee/10. Delete Employee Dependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Dependents Deleted\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "relationship",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "sequenceNumber",
+									"value": "{{seqId_Depend}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/dependent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"dependent"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/18. Delete Supervisor Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const respond = pm.response.json();\r",
+									" console.log(respond.error);\r",
+									" pm.test(\"Failed Dalete Supervisor Details\", () => {\r",
+									"     const expectedObject = {\r",
+									"         \"status\": \"404\",\r",
+									"         \"text\": \"Supervisor Not Found\",\r",
+									"     };\r",
+									"   pm.expect(respond.error).to.deep.include(expectedObject);\r",
+									" });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "supervisorId",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "reportingMethod",
+									"value": "Delete",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/supervisor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"supervisor"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": " Employee /24. Delete Employee Work Experience",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Work Experience Deleted\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "seqId",
+									"value": "{{seqId_WoEx}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/work-experience",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"work-experience"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee /27. Delete Employee Education",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data Employee Education Deleted\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Successfully Deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "seqId",
+									"value": "{{seqId_Edu}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/education",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"education"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Employee/31. Delete Employee Custom Field (Failed)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const respond = pm.response.json();\r",
+									" console.log(respond.error);\r",
+									" pm.test(\"Failed Dalete Employee Custom Field\", () => {\r",
+									"     const expectedObject = {\r",
+									"         \"status\": \"404\",\r",
+									"         \"text\": \"Custom Field Not Found\",\r",
+									"     };\r",
+									"   pm.expect(respond.error).to.deep.include(expectedObject);\r",
+									" });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}",
+									"type": "text"
+								},
+								{
+									"key": "fieldId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/employee/:id/custom-field",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employee",
+								":id",
+								"custom-field"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idEmployee}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://qa.cilsy.id/symfony/web/index.php",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "token",
+			"type": "string"
+		},
+		{
+			"key": "idEmployee",
+			"value": "idEmployee",
+			"type": "string"
+		},
+		{
+			"key": "seqId_Depend",
+			"value": "seqId_Depend"
+		},
+		{
+			"key": "seqId_Edu",
+			"value": "seqId_Edu",
+			"type": "string"
+		},
+		{
+			"key": "seqId_WoEx",
+			"value": "seqId_WoEx",
+			"type": "string"
+		}
+	]
+}
